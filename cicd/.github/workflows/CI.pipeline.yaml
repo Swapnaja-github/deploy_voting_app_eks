@@ -3,9 +3,11 @@ run-name: ${{ github.actor }} is Deploying
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: 
+      - main
+    tags:
+      - '*'
+  workflow_dispatch:
 
 jobs:
   build-test-and-docker:
@@ -47,6 +49,23 @@ jobs:
       - name: Update kubeconfig
         run: |
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.AWS_CLUSTER }}
+
+      - name: Generate the final deployment template
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gettext-base
+          export VOTE_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/voting_app:${{ env.IMAGE_TAG }}"
+          envsubst < vote_deployment_svc.yaml > vote_deployment_svc.yaml
+
+          export RESULT_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/result_app:${{ env.IMAGE_TAG }}"
+          envsubst < result_deployment_svc.yaml > vote_deployment_svc.yaml
+
+          export VOTE_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/worker-app:${{ env.IMAGE_TAG }}"
+          envsubst < worker_deployment_svc.yaml > worker_deployment_svc.yaml
+
+
+          echo "Final deployment:"
+          cat vote_deployment_svc.yaml
 
       - name: Deploy to EKS
         run: |
