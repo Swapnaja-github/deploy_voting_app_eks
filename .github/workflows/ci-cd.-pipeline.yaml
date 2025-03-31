@@ -24,8 +24,8 @@ jobs:
       - name: Build Docker images
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest ./delpoy_voting_app_EKS_cluster/vote
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest .delpoy_voting_app_EKS_cluster/worker
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/result:latest .delpoy_voting_app_EKS_cluster/result
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest ./delpoy_voting_app_EKS_cluster/worker
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/result:latest ./delpoy_voting_app_EKS_cluster/result
 
       - name: Push Docker images
         run: |
