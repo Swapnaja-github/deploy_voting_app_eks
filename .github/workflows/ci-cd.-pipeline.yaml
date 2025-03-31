@@ -21,8 +21,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
 
       - name: Build and push vote service
@@ -31,8 +31,8 @@ jobs:
           context: "./delpoy_voting_app_EKS_cluster/vote"
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/vote:${{ env.IMAGE_TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/vote:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/vote:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/vote:latest
 
       - name: Build and push Worker service
         uses: docker/build-push-action@v6
@@ -40,8 +40,8 @@ jobs:
           context: "./delpoy_voting_app_EKS_cluster/worker"
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/worker:${{ env.IMAGE_TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/worker:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/worker:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/worker:latest
             s
       - name: Build and push result service
         uses: docker/build-push-action@v6
@@ -49,8 +49,8 @@ jobs:
           context: "./delpoy_voting_app_EKS_cluster/result"
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/result:${{ env.IMAGE_TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/result:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/result:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/result:latest
 
 
       # - name: Build Docker images
@@ -86,13 +86,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gettext-base
-          export VOTE_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/voting_app:${{ env.IMAGE_TAG }}"
+          export VOTE_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/voting_app:${{ env.IMAGE_TAG }}"
           envsubst < vote_deployment_svc.yaml > vote_deployment_svc.yaml
 
-          export RESULT_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/result_app:${{ env.IMAGE_TAG }}"
+          export RESULT_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/result_app:${{ env.IMAGE_TAG }}"
           envsubst < result_deployment_svc.yaml > vote_deployment_svc.yaml
 
-          export VOTE_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/worker-app:${{ env.IMAGE_TAG }}"
+          export VOTE_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/worker-app:${{ env.IMAGE_TAG }}"
           envsubst < worker_deployment_svc.yaml > worker_deployment_svc.yaml
 
 
