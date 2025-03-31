@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker-container
+        # Replace with your Docker Hub (or other registry) image
+          image: sjagtap0/worker
+          ports:
+            - containerPort: 80
+          env:
+            - name: REDIS_HOST
+              value: "redis-service"
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_USERNAME
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: DB_NAME
+              value: "votes"
+            # - name: POSTGRES_USER
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: db-credentials
+            #       key: POSTGRES_USER
+            # - name: POSTGRES_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: db-credentials
+            #       key: POSTGRES_PASSWORD
+            # - name: POSTGRES_DB
+            #   value: "votes"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-service
+spec:
+  selector:
+    app: worker
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
