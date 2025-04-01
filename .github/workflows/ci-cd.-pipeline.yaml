@@ -44,20 +44,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Install kubectl
+      - name: Install kubectl & update kubeconfig for EKS 
         run: |
-          curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.0/2024-12-20/bin/linux/amd64/kubectl
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Update kubeconfig
-        run: |
+          curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.32.0/2024-12-20/bin/linux/amd64/kubectl
+          chmod +x ./kubectl
+          mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.AWS_CLUSTER }}
 
       - name: Generate the final deployment template
         run: |
           sudo apt-get update
           sudo apt-get install -y gettext-base
+          
           export VOTE_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/voting_app:${{ env.IMAGE_TAG }}"
           envsubst < ./k8s/vote_deployment_svc.yaml > vote_deployment_svc.yaml
 
