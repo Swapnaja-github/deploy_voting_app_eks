@@ -29,19 +29,6 @@ spec:
               value: "postgres"
             - name: DB_NAME
               value: "votes"
-            # - name: POSTGRES_USER
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: db-credentials
-            #       key: POSTGRES_USER
-            # - name: POSTGRES_PASSWORD
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: db-credentials
-            #       key: POSTGRES_PASSWORD
-            # - name: POSTGRES_DB
-            #   value: "votes"
-
 ---
 apiVersion: v1
 kind: Service
