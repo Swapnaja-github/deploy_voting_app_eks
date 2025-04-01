@@ -59,13 +59,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gettext-base
           export VOTE_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/voting_app:${{ env.IMAGE_TAG }}"
-          envsubst < vote_deployment_svc.yaml > vote_deployment_svc.yaml
+          envsubst < ./k8s/vote_deployment_svc.yaml > vote_deployment_svc.yaml
 
           export RESULT_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/result_app:${{ env.IMAGE_TAG }}"
-          envsubst < result_deployment_svc.yaml > vote_deployment_svc.yaml
+          envsubst < ./k8s/result_deployment_svc.yaml > vote_deployment_svc.yaml
 
           export VOTE_NAME="docker.io/${{ secrets.DOCKERHUB_USERNAME }}/worker-app:${{ env.IMAGE_TAG }}"
-          envsubst < worker_deployment_svc.yaml > worker_deployment_svc.yaml
+          envsubst < ./k8s/worker_deployment_svc.yaml > worker_deployment_svc.yaml
 
 
           echo "Final deployment:"
